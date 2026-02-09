@@ -1,0 +1,147 @@
+.checkpoint-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #764ba2;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.checkpoint-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.checkpoint-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sequence-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #764ba2;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.delete-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delete-btn:hover {
+  background: #ff3838;
+}
+
+.coordinates {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.coord-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.coord-label {
+  color: #667eea;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.coord-value {
+  color: #333;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.card-section {
+  margin-top: 1rem;
+}
+
+.card-section h3 {
+  color: #764ba2;
+  font-size: 1rem;
+  margin: 0 0 0.8rem 0;
+}
+
+.coordinates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 0.8rem;
+}
+
+.coordinates-list li {
+  padding: 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.coordinates-list li:last-child {
+  border-bottom: none;
+}
+
+.no-data {
+  color: #999;
+  font-style: italic;
+  margin: 0;
+  padding: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .checkpoint-card {
+    padding: 1rem;
+  }
+
+  .coordinates {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .sequence-badge {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+}
