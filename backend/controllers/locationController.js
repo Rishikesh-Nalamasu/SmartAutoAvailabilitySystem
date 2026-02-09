@@ -7,130 +7,101 @@ import {
 } from "../models/locationModel.js";
 
 // GET all locations
-export const getLocations = async (req, res) => {
+export const getLocations = async (req, res, next) => {
   try {
     const locations = await getAllLocations();
-    res.json({
-      success: true,
-      data: locations,
-    });
+    res.json({ success: true, data: locations });
   } catch (error) {
-    console.error("Error fetching locations:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching locations",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // GET location by ID
-export const getLocation = async (req, res) => {
+export const getLocation = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const location = await getLocationById(id);
-
+    const location = await getLocationById(req.params.id);
     if (!location) {
-      return res.status(404).json({
-        success: false,
-        message: "Location not found",
-      });
+      return res.status(404).json({ success: false, message: "Location not found" });
     }
-
-    res.json({
-      success: true,
-      data: location,
-    });
+    res.json({ success: true, data: location });
   } catch (error) {
-    console.error("Error fetching location:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching location",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // POST create new location
-export const addLocation = async (req, res) => {
+export const addLocation = async (req, res, next) => {
   try {
     const { locationName, locationDescription, geofencePoints, uiCoordinates } = req.body;
 
     // Validation
-    if (!locationName || !locationDescription || !geofencePoints || geofencePoints.length === 0) {
+    if (!locationName || !locationDescription) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields: locationName, locationDescription, geofencePoints (at least 1 point)",
+        message: "Missing required fields: locationName, locationDescription"
       });
     }
 
-    const locationId = await createLocation(
-      locationName,
-      locationDescription,
-      geofencePoints,
-      uiCoordinates || []
-    );
+    if (!geofencePoints || geofencePoints.length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: "At least 3 geofence points are required to form a polygon"
+      });
+    }
 
+    // Validate geofence points
+    for (const point of geofencePoints) {
+      if (typeof point.latitude !== 'number' || typeof point.longitude !== 'number') {
+        return res.status(400).json({
+          success: false,
+          message: "Each geofence point must have valid latitude and longitude numbers"
+        });
+      }
+    }
+
+    const locationId = await createLocation(locationName, locationDescription, geofencePoints, uiCoordinates || []);
     res.status(201).json({
       success: true,
       message: "Location created successfully",
-      data: { location_id: locationId },
+      data: { location_id: locationId }
     });
   } catch (error) {
-    console.error("Error creating location:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error creating location",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // PUT update location
-export const editLocation = async (req, res) => {
+export const editLocation = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { locationName, locationDescription } = req.body;
+    const { locationName, locationDescription, geofencePoints, uiCoordinates } = req.body;
 
     if (!locationName || !locationDescription) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields: locationName, locationDescription",
+        message: "Missing required fields: locationName, locationDescription"
       });
     }
 
-    await updateLocation(id, locationName, locationDescription);
+    if (geofencePoints && geofencePoints.length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: "At least 3 geofence points are required"
+      });
+    }
 
-    res.json({
-      success: true,
-      message: "Location updated successfully",
-    });
+    await updateLocation(req.params.id, locationName, locationDescription, geofencePoints, uiCoordinates);
+    res.json({ success: true, message: "Location updated successfully" });
   } catch (error) {
-    console.error("Error updating location:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error updating location",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // DELETE location
-export const removeLocation = async (req, res) => {
+export const removeLocation = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    await deleteLocation(id);
-
-    res.json({
-      success: true,
-      message: "Location deleted successfully",
-    });
+    await deleteLocation(req.params.id);
+    res.json({ success: true, message: "Location deleted successfully" });
   } catch (error) {
-    console.error("Error deleting location:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error deleting location",
-      error: error.message,
-    });
+    next(error);
   }
 };

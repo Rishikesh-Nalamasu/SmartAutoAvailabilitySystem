@@ -1,65 +1,108 @@
-.checkpoints-container {
-  max-width: 1200px;
-  margin: 0 auto;
+.checkpoints-page {
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.checkpoints-header {
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #764ba2;
+  border-bottom: 2px solid #667eea;
 }
 
-.checkpoints-header h1 {
-  color: #333;
+.page-header h1 {
   margin: 0;
-  font-size: 2rem;
+  color: #333;
 }
 
-.toggle-form-btn {
-  background: #764ba2;
+.add-btn {
+  background: #667eea;
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.toggle-form-btn:hover {
-  background: #667eea;
+.add-btn:hover {
+  background: #764ba2;
 }
 
 .error-message {
   background: #ff6b6b;
   color: white;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   margin-bottom: 1rem;
 }
 
-.form-section {
-  background: #f8f9fa;
-  padding: 2rem;
-  border-radius: 8px;
+/* Map Section */
+.map-section {
   margin-bottom: 2rem;
 }
 
-.add-checkpoint-form {
-  margin-bottom: 0;
+.map-section h2 {
+  color: #333;
+  margin-bottom: 1rem;
 }
 
-.add-checkpoint-form h2 {
+.checkpoints-map {
+  height: 400px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.select-point-btn {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.8rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.select-point-btn:hover {
+  background: #764ba2;
+}
+
+.select-point-btn.selecting {
+  background: #28a745;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+/* Form Section */
+.form-section {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.form-section h2 {
   color: #333;
   margin-top: 0;
+  margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
+.checkpoint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .form-row {
@@ -68,43 +111,78 @@
   gap: 1rem;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #333;
   font-weight: 600;
+  color: #333;
 }
 
 .form-group input {
-  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
-  font-family: inherit;
-  box-sizing: border-box;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #764ba2;
-  box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.coords-section, .ui-coords-section {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.coords-section h3, .ui-coords-section h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.coord-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.device-label {
+  min-width: 60px;
+  font-weight: 600;
+  color: #764ba2;
+}
+
+.coord-row input {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .submit-btn {
-  background: #764ba2;
+  background: #667eea;
   color: white;
   border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 4px;
+  padding: 1rem;
+  border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
-  width: 100%;
+  margin-top: 1rem;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #667eea;
+  background: #764ba2;
 }
 
 .submit-btn:disabled {
@@ -112,45 +190,54 @@
   cursor: not-allowed;
 }
 
-.checkpoints-list h2 {
-  color: #333;
-  margin-top: 0;
+/* Checkpoints List */
+.checkpoints-list {
+  margin-top: 2rem;
 }
 
-.loading,
-.no-data {
+.checkpoints-list h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.loading, .no-data {
   text-align: center;
   padding: 2rem;
   color: #666;
-  font-size: 1.1rem;
-}
-
-.loading {
-  background: #f0f0f0;
-  border-radius: 4px;
-}
-
-.no-data {
-  background: #e8f5e9;
-  border-radius: 4px;
+  background: #f8f9fa;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
-  .checkpoints-container {
+  .checkpoints-page {
     padding: 1rem;
   }
 
-  .checkpoints-header {
+  .page-header {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
 
-  .checkpoints-header h1 {
-    font-size: 1.5rem;
+  .checkpoints-map {
+    height: 300px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .coord-row {
+    flex-wrap: wrap;
+  }
+
+  .device-label {
+    width: 100%;
   }
 }

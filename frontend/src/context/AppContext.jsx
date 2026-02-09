@@ -4,6 +4,8 @@ import {
   getCheckpoints,
   createLocation as apiCreateLocation,
   createCheckpoint as apiCreateCheckpoint,
+  updateLocation as apiUpdateLocation,
+  updateCheckpoint as apiUpdateCheckpoint,
   deleteLocation as apiDeleteLocation,
   deleteCheckpoint as apiDeleteCheckpoint,
 } from "../services/api";
@@ -24,7 +26,7 @@ export const AppProvider = ({ children }) => {
       const response = await getLocations();
       setLocations(response.data.data || []);
     } catch (err) {
-      setError(err.message || "Failed to fetch locations");
+      setError(err.response?.data?.message || "Failed to fetch locations");
       console.error("Error fetching locations:", err);
     } finally {
       setLoading(false);
@@ -39,85 +41,106 @@ export const AppProvider = ({ children }) => {
       const response = await getCheckpoints();
       setCheckpoints(response.data.data || []);
     } catch (err) {
-      setError(err.message || "Failed to fetch checkpoints");
+      setError(err.response?.data?.message || "Failed to fetch checkpoints");
       console.error("Error fetching checkpoints:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Add new location
-  const addLocation = async (locationData) => {
+  // Add location
+  const addLocation = async (data) => {
     setError(null);
     try {
-      const response = await apiCreateLocation(locationData);
+      await apiCreateLocation(data);
       await fetchLocations();
-      return response.data;
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || "Failed to create location";
-      setError(errorMsg);
+      setError(err.response?.data?.message || "Failed to create location");
       throw err;
     }
   };
 
-  // Add new checkpoint
-  const addCheckpoint = async (checkpointData) => {
+  // Edit location
+  const editLocation = async (id, data) => {
     setError(null);
     try {
-      const response = await apiCreateCheckpoint(checkpointData);
-      await fetchCheckpoints();
-      return response.data;
+      await apiUpdateLocation(id, data);
+      await fetchLocations();
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || "Failed to create checkpoint";
-      setError(errorMsg);
+      setError(err.response?.data?.message || "Failed to update location");
       throw err;
     }
   };
 
   // Delete location
-  const removeLocation = async (locationId) => {
+  const removeLocation = async (id) => {
     setError(null);
     try {
-      await apiDeleteLocation(locationId);
+      await apiDeleteLocation(id);
       await fetchLocations();
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || "Failed to delete location";
-      setError(errorMsg);
+      setError(err.response?.data?.message || "Failed to delete location");
+      throw err;
+    }
+  };
+
+  // Add checkpoint
+  const addCheckpoint = async (data) => {
+    setError(null);
+    try {
+      await apiCreateCheckpoint(data);
+      await fetchCheckpoints();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to create checkpoint");
+      throw err;
+    }
+  };
+
+  // Edit checkpoint
+  const editCheckpoint = async (id, data) => {
+    setError(null);
+    try {
+      await apiUpdateCheckpoint(id, data);
+      await fetchCheckpoints();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update checkpoint");
       throw err;
     }
   };
 
   // Delete checkpoint
-  const removeCheckpoint = async (checkpointId) => {
+  const removeCheckpoint = async (id) => {
     setError(null);
     try {
-      await apiDeleteCheckpoint(checkpointId);
+      await apiDeleteCheckpoint(id);
       await fetchCheckpoints();
     } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || "Failed to delete checkpoint";
-      setError(errorMsg);
+      setError(err.response?.data?.message || "Failed to delete checkpoint");
       throw err;
     }
   };
 
-  // Initial load
   useEffect(() => {
     fetchLocations();
     fetchCheckpoints();
   }, []);
 
-  const value = {
-    locations,
-    checkpoints,
-    loading,
-    error,
-    fetchLocations,
-    fetchCheckpoints,
-    addLocation,
-    addCheckpoint,
-    removeLocation,
-    removeCheckpoint,
-  };
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{
+      locations,
+      checkpoints,
+      loading,
+      error,
+      fetchLocations,
+      fetchCheckpoints,
+      addLocation,
+      editLocation,
+      removeLocation,
+      addCheckpoint,
+      editCheckpoint,
+      removeCheckpoint,
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
 };

@@ -7,52 +7,30 @@ import {
 } from "../models/checkpointModel.js";
 
 // GET all checkpoints
-export const getCheckpoints = async (req, res) => {
+export const getCheckpoints = async (req, res, next) => {
   try {
     const checkpoints = await getAllCheckpoints();
-    res.json({
-      success: true,
-      data: checkpoints,
-    });
+    res.json({ success: true, data: checkpoints });
   } catch (error) {
-    console.error("Error fetching checkpoints:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching checkpoints",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // GET checkpoint by ID
-export const getCheckpoint = async (req, res) => {
+export const getCheckpoint = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const checkpoint = await getCheckpointById(id);
-
+    const checkpoint = await getCheckpointById(req.params.id);
     if (!checkpoint) {
-      return res.status(404).json({
-        success: false,
-        message: "Checkpoint not found",
-      });
+      return res.status(404).json({ success: false, message: "Checkpoint not found" });
     }
-
-    res.json({
-      success: true,
-      data: checkpoint,
-    });
+    res.json({ success: true, data: checkpoint });
   } catch (error) {
-    console.error("Error fetching checkpoint:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching checkpoint",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // POST create new checkpoint
-export const addCheckpoint = async (req, res) => {
+export const addCheckpoint = async (req, res, next) => {
   try {
     const { checkpointName, latitude, longitude, sequenceOrder, uiCoordinates } = req.body;
 
@@ -60,78 +38,53 @@ export const addCheckpoint = async (req, res) => {
     if (!checkpointName || latitude === undefined || longitude === undefined || sequenceOrder === undefined) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields: checkpointName, latitude, longitude, sequenceOrder",
+        message: "Missing required fields: checkpointName, latitude, longitude, sequenceOrder"
       });
     }
 
-    const checkpointId = await createCheckpoint(
-      checkpointName,
-      latitude,
-      longitude,
-      sequenceOrder,
-      uiCoordinates || []
-    );
+    if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid coordinates. Latitude: -90 to 90, Longitude: -180 to 180"
+      });
+    }
 
+    const checkpointId = await createCheckpoint(checkpointName, latitude, longitude, sequenceOrder, uiCoordinates || []);
     res.status(201).json({
       success: true,
       message: "Checkpoint created successfully",
-      data: { checkpoint_id: checkpointId },
+      data: { checkpoint_id: checkpointId }
     });
   } catch (error) {
-    console.error("Error creating checkpoint:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error creating checkpoint",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // PUT update checkpoint
-export const editCheckpoint = async (req, res) => {
+export const editCheckpoint = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { checkpointName, latitude, longitude, sequenceOrder } = req.body;
+    const { checkpointName, latitude, longitude, sequenceOrder, uiCoordinates } = req.body;
 
     if (!checkpointName || latitude === undefined || longitude === undefined || sequenceOrder === undefined) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields: checkpointName, latitude, longitude, sequenceOrder",
+        message: "Missing required fields: checkpointName, latitude, longitude, sequenceOrder"
       });
     }
 
-    await updateCheckpoint(id, checkpointName, latitude, longitude, sequenceOrder);
-
-    res.json({
-      success: true,
-      message: "Checkpoint updated successfully",
-    });
+    await updateCheckpoint(req.params.id, checkpointName, latitude, longitude, sequenceOrder, uiCoordinates);
+    res.json({ success: true, message: "Checkpoint updated successfully" });
   } catch (error) {
-    console.error("Error updating checkpoint:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error updating checkpoint",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // DELETE checkpoint
-export const removeCheckpoint = async (req, res) => {
+export const removeCheckpoint = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    await deleteCheckpoint(id);
-
-    res.json({
-      success: true,
-      message: "Checkpoint deleted successfully",
-    });
+    await deleteCheckpoint(req.params.id);
+    res.json({ success: true, message: "Checkpoint deleted successfully" });
   } catch (error) {
-    console.error("Error deleting checkpoint:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error deleting checkpoint",
-      error: error.message,
-    });
+    next(error);
   }
 };

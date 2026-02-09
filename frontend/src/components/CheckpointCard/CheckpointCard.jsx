@@ -1,48 +1,55 @@
 import "./CheckpointCard.css";
 
-export default function CheckpointCard({ checkpoint, onDelete }) {
-  const uiCoordinates = checkpoint.ui_coordinates?.filter(c => c !== null) || [];
+export default function CheckpointCard({ checkpoint, onEdit, onDelete }) {
+  const uiCoords = checkpoint.ui_coordinates?.filter(c => c !== null) || [];
+  
+  const mobileCoord = uiCoords.find(c => c.device_type === "mobile");
+  const laptopCoord = uiCoords.find(c => c.device_type === "laptop");
 
   return (
     <div className="checkpoint-card">
       <div className="card-header">
         <div className="checkpoint-info">
           <span className="sequence-badge">{checkpoint.sequence_order}</span>
-          <h2>{checkpoint.checkpoint_name}</h2>
+          <h3>{checkpoint.checkpoint_name}</h3>
         </div>
-        <button 
-          className="delete-btn"
-          onClick={() => onDelete(checkpoint.checkpoint_id)}
-          title="Delete checkpoint"
-        >
-          ✕
-        </button>
+        <div className="card-actions">
+          <button className="edit-btn" onClick={() => onEdit(checkpoint)}>✎</button>
+          <button className="delete-btn" onClick={() => onDelete(checkpoint.checkpoint_id)}>✕</button>
+        </div>
       </div>
-
+      
       <div className="coordinates">
-        <div className="coord-item">
-          <span className="coord-label">Latitude:</span>
-          <span className="coord-value">{checkpoint.latitude.toFixed(6)}</span>
+        <div className="coord-group">
+          <span className="coord-label">Lat:</span>
+          <span className="coord-value">{Number(checkpoint.latitude).toFixed(6)}</span>
         </div>
-        <div className="coord-item">
-          <span className="coord-label">Longitude:</span>
-          <span className="coord-value">{checkpoint.longitude.toFixed(6)}</span>
+        <div className="coord-group">
+          <span className="coord-label">Lng:</span>
+          <span className="coord-value">{Number(checkpoint.longitude).toFixed(6)}</span>
         </div>
       </div>
-
-      <div className="card-section">
-        <h3>📱 UI Coordinates ({uiCoordinates.length})</h3>
-        {uiCoordinates.length > 0 ? (
-          <ul className="coordinates-list">
-            {uiCoordinates.map((coord) => (
-              <li key={coord.ui_coord_id}>
-                {coord.device_type}: X={coord.x_coordinate}, Y={coord.y_coordinate}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-data">No UI coordinates</p>
-        )}
+      
+      <div className="ui-coords">
+        <h4>📱 UI Coordinates</h4>
+        <div className="coords-grid">
+          <div className="coord-item">
+            <span className="device">Mobile:</span>
+            {mobileCoord ? (
+              <span>X: {Number(mobileCoord.x_coordinate).toFixed(2)}, Y: {Number(mobileCoord.y_coordinate).toFixed(2)}</span>
+            ) : (
+              <span className="not-set">Not set</span>
+            )}
+          </div>
+          <div className="coord-item">
+            <span className="device">Laptop:</span>
+            {laptopCoord ? (
+              <span>X: {Number(laptopCoord.x_coordinate).toFixed(2)}, Y: {Number(laptopCoord.y_coordinate).toFixed(2)}</span>
+            ) : (
+              <span className="not-set">Not set</span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

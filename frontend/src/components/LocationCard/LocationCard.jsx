@@ -1,52 +1,51 @@
 import "./LocationCard.css";
 
-export default function LocationCard({ location, onDelete }) {
+export default function LocationCard({ location, onEdit, onDelete }) {
   const geofencePoints = location.geofence_points?.filter(p => p !== null) || [];
-  const uiCoordinates = location.ui_coordinates?.filter(c => c !== null) || [];
+  const uiCoords = location.ui_coordinates?.filter(c => c !== null) || [];
+  
+  const mobileCoord = uiCoords.find(c => c.device_type === "mobile");
+  const laptopCoord = uiCoords.find(c => c.device_type === "laptop");
 
   return (
     <div className="location-card">
       <div className="card-header">
-        <h2>{location.location_name}</h2>
-        <button 
-          className="delete-btn"
-          onClick={() => onDelete(location.location_id)}
-          title="Delete location"
-        >
-          ✕
-        </button>
+        <h3>{location.location_name}</h3>
+        <div className="card-actions">
+          <button className="edit-btn" onClick={() => onEdit(location)}>✎</button>
+          <button className="delete-btn" onClick={() => onDelete(location.location_id)}>✕</button>
+        </div>
       </div>
       
-      <p className="card-description">{location.location_description}</p>
-
-      <div className="card-section">
-        <h3>📍 Geofence Points ({geofencePoints.length})</h3>
-        {geofencePoints.length > 0 ? (
-          <ul className="points-list">
-            {geofencePoints.map((point, idx) => (
-              <li key={point.point_id || idx}>
-                Lat: {point.latitude.toFixed(6)}, Lng: {point.longitude.toFixed(6)}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-data">No geofence points</p>
-        )}
-      </div>
-
-      <div className="card-section">
-        <h3>📱 UI Coordinates ({uiCoordinates.length})</h3>
-        {uiCoordinates.length > 0 ? (
-          <ul className="coordinates-list">
-            {uiCoordinates.map((coord) => (
-              <li key={coord.ui_coord_id}>
-                {coord.device_type}: X={coord.x_coordinate}, Y={coord.y_coordinate}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-data">No UI coordinates</p>
-        )}
+      <p className="description">{location.location_description}</p>
+      
+      <div className="card-info">
+        <div className="info-row">
+          <span className="label">Geofence Points:</span>
+          <span className="value">{geofencePoints.length}</span>
+        </div>
+        
+        <div className="ui-coords">
+          <h4>📱 UI Coordinates</h4>
+          <div className="coords-grid">
+            <div className="coord-item">
+              <span className="device">Mobile:</span>
+              {mobileCoord ? (
+                <span>X: {Number(mobileCoord.x_coordinate).toFixed(2)}, Y: {Number(mobileCoord.y_coordinate).toFixed(2)}</span>
+              ) : (
+                <span className="not-set">Not set</span>
+              )}
+            </div>
+            <div className="coord-item">
+              <span className="device">Laptop:</span>
+              {laptopCoord ? (
+                <span>X: {Number(laptopCoord.x_coordinate).toFixed(2)}, Y: {Number(laptopCoord.y_coordinate).toFixed(2)}</span>
+              ) : (
+                <span className="not-set">Not set</span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

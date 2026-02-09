@@ -1,9 +1,8 @@
 .checkpoint-card {
   background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1.2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
   border-left: 4px solid #764ba2;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -16,44 +15,61 @@
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
 .checkpoint-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .sequence-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   background: #764ba2;
   color: white;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.checkpoint-info h3 {
+  margin: 0;
+  color: #333;
   font-size: 1.1rem;
 }
 
-.card-header h2 {
-  margin: 0;
-  color: #333;
-  font-size: 1.5rem;
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn, .delete-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.edit-btn {
+  background: #667eea;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #5a6fd6;
 }
 
 .delete-btn {
   background: #ff4757;
   color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.4rem 0.8rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background 0.3s;
 }
 
 .delete-btn:hover {
@@ -63,85 +79,58 @@
 .coordinates {
   display: flex;
   gap: 2rem;
-  margin-bottom: 1rem;
   background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 4px;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
 }
 
-.coord-item {
+.coord-group {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.5rem;
 }
 
 .coord-label {
   color: #667eea;
-  font-size: 0.85rem;
   font-weight: 600;
-  text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .coord-value {
-  color: #333;
-  font-size: 1rem;
   font-family: 'Courier New', monospace;
-}
-
-.card-section {
-  margin-top: 1rem;
-}
-
-.card-section h3 {
-  color: #764ba2;
-  font-size: 1rem;
-  margin: 0 0 0.8rem 0;
-}
-
-.coordinates-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background: #f8f9fa;
-  border-radius: 4px;
-  padding: 0.8rem;
-}
-
-.coordinates-list li {
-  padding: 0.5rem;
-  color: #555;
   font-size: 0.9rem;
-  border-bottom: 1px solid #e0e0e0;
 }
 
-.coordinates-list li:last-child {
-  border-bottom: none;
+.ui-coords {
+  background: #f8f9fa;
+  padding: 0.8rem;
+  border-radius: 6px;
 }
 
-.no-data {
+.ui-coords h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.coords-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.coord-item {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.device {
+  color: #764ba2;
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.not-set {
   color: #999;
   font-style: italic;
-  margin: 0;
-  padding: 0.8rem;
-}
-
-@media (max-width: 768px) {
-  .checkpoint-card {
-    padding: 1rem;
-  }
-
-  .coordinates {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .card-header h2 {
-    font-size: 1.2rem;
-  }
-
-  .sequence-badge {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
 }
